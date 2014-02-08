@@ -57,23 +57,27 @@ public class USLocalizer {
 			 * This is very similar to the FALLING_EDGE routine, but the robot
 			 * will face toward the wall for most of it.
 			 */
-			
+			//finds wall
+			rotateToWall(true);
+			//goes to end of wall
+			rotateFromWall(true);
+			angleA = odo.getTheta();
+			//
+			rotateToWall(false);
+			rotateToWall(false);
+			angleB = odo.getTheta();
 			//
 			// FILL THIS IN
 			//
+			errorAngle = getAngle(angleA, angleB);
+			robot.turnTo(errorAngle);
+			odo.setPosition(new double [] {0.0, 0.0, 0.0}, new boolean [] {true, true, true});
+
 		}
 	}
 	 private void rotateFromWall(boolean direction)
 	 {
 		robot.rotate(direction);
-		
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		while(distance < (WALL_DISTANCE + NOISE)){
 			distance = getFilteredData();	//debugging, don't care about collissions
 		}
@@ -85,14 +89,6 @@ public class USLocalizer {
 	  */
 	private void rotateToWall(boolean direction){
 		robot.rotate(direction);
-		
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		distance = getFilteredData();
 		while(distance > (WALL_DISTANCE - NOISE)){
 			distance = getFilteredData();
@@ -122,7 +118,7 @@ public class USLocalizer {
 		// do a ping
 		us.ping();
 		// wait for the ping to complete
-		try { Thread.sleep(80); } catch (InterruptedException e) {}
+		try { Thread.sleep(50); } catch (InterruptedException e) {}
 		
 		// there will be a delay here
 		dist = us.getDistance();

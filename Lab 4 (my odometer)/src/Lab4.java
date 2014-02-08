@@ -8,20 +8,20 @@ public class Lab4 {
 		Driver driver = new Driver(odo);
 		OdometryDisplay lcd = new OdometryDisplay(odo);
 		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S2);
-		LightSensor ls = new LightSensor(SensorPort.S1);
+		ColorSensor cs = new ColorSensor(SensorPort.S1);
 		
 		odo.start();
 		lcd.start();
 		
 		Button.waitForAnyPress();
 		// perform the ultrasonic localization
-		USLocalizer usl = new USLocalizer(odo, driver, us, USLocalizer.LocalizationType.FALLING_EDGE);
-		usl.doLocalization();
-		/*
+/*		USLocalizer usl = new USLocalizer(odo, driver, us, USLocalizer.LocalizationType.FALLING_EDGE);
+		usl.doLocalization();*/
+
 		// perform the light sensor localization
-		LightLocalizer lsl = new LightLocalizer(odo, driver, ls);
+		LightLocalizer lsl = new LightLocalizer(odo, driver, cs);
 		lsl.doLocalization();
-		*/
+
 
 /*		Button.waitForAnyPress();
 

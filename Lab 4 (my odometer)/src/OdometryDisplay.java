@@ -46,10 +46,8 @@ public class OdometryDisplay extends Thread {
 		  Color color = cs.getColor();
 		  //displays theta values
 		  LCD.drawString("error angle = " + Double.toString(USLocalizer.errorAngle), 0, 3);
-		  LCD.drawString("Angle A = " + Double.toString(Math.toDegrees(USLocalizer.angleA)), 0, 4);
-		  LCD.drawString("Angle B = " + Double.toString(Math.toDegrees(USLocalizer.angleB)), 0, 5);
-		  LCD.drawString("Distance = " + Double.toString((USLocalizer.distance)), 0, 6);
-		  //LCD.drawString(USLocalizer.doing, 0, 6);
+		  LCD.drawString("LightValue = " + Double.toString(LightLocalizer.lightValue), 0, 3);
+
 			// throttle the OdometryDisplay
 			displayEnd = System.currentTimeMillis();
 			if (displayEnd - displayStart < DISPLAY_PERIOD) {
