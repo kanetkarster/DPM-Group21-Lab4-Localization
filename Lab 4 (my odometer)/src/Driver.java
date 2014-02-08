@@ -12,6 +12,8 @@ public class Driver extends Thread  {
 	
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 150;
+	private static final int LOCALIZE_SPEED = 150;
+	
 	NXTRegulatedMotor leftMotor = Motor.A;
 	NXTRegulatedMotor rightMotor = Motor.B;
 	private static double WHEEL_BASE = 15.5;
@@ -86,6 +88,22 @@ public class Driver extends Thread  {
 		
 		navigating = false;
 	}
+	public void rotate (boolean forward){
+		leftMotor.setSpeed(LOCALIZE_SPEED);
+		rightMotor.setSpeed(LOCALIZE_SPEED);
+		if (forward){
+			leftMotor.forward();
+			rightMotor.backward();
+		} else {
+			leftMotor.backward();
+			rightMotor.forward();
+		}
+	}
+	
+	public void stop(){
+		leftMotor.setSpeed(0);
+		rightMotor.setSpeed(0);
+	}
 /**
  * Returns true if the robot is navigating
  * 
@@ -105,7 +123,7 @@ public class Driver extends Thread  {
  * 
  * @return Degrees the servo should turn
  */
-	private static int convertAngle(double radius, double width, double angle) {
+	public static int convertAngle(double radius, double width, double angle) {
 		//(width * angle / radius ) / (2)
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}
@@ -117,7 +135,7 @@ public class Driver extends Thread  {
  * 
  * @return degrees to turn servos in order to move forward by that amount
  */
-	private static int convertDistance(double radius, double distance) {
+	public static int convertDistance(double radius, double distance) {
 		// ( D / R) * (360 / 2PI)
 		return (int) ((180.0 * distance) / (Math.PI * radius));
 	}
