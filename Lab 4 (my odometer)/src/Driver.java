@@ -12,7 +12,7 @@ public class Driver extends Thread  {
 	
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 150;
-	private static final int LOCALIZE_SPEED = 150;
+	private static final int LOCALIZE_SPEED = 100;
 	
 	NXTRegulatedMotor leftMotor = Motor.A;
 	NXTRegulatedMotor rightMotor = Motor.B;
@@ -78,8 +78,8 @@ public class Driver extends Thread  {
 	public void turnTo (double theta){
 	
 		// turn degrees clockwise
-		leftMotor.setSpeed(ROTATE_SPEED);
-		rightMotor.setSpeed(ROTATE_SPEED);
+		leftMotor.setSpeed(LOCALIZE_SPEED);
+		rightMotor.setSpeed(LOCALIZE_SPEED);
 		
 		navigating = true;
 		//calculates angel to turn to and rotates

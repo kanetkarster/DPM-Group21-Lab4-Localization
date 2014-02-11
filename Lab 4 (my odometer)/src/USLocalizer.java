@@ -1,7 +1,9 @@
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
+import lejos.util.Delay;
 
 public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };	
@@ -36,9 +38,16 @@ public class USLocalizer {
 		if (locType == LocalizationType.FALLING_EDGE) {
 			// rotate the robot until it sees no wall
 			rotateFromWall(true);
+			//to avoid seeing one wall twice
+			Sound.beep();
+			robot.turnTo(25);
+			Sound.beep();
 			// keep rotating until the robot sees a wall, then latch the angle
 			rotateToWall(true);
 			angleA = odo.getTheta();
+			Sound.beep();
+			robot.turnTo(-25);
+			Sound.beep();
 			// switch direction and wait until it sees no wall
 			rotateFromWall(false);
 			// keep rotating until the robot sees a wall, then latch the angle
@@ -48,8 +57,9 @@ public class USLocalizer {
 			// angles to the right of angleB is 45 degrees past 'north'
 			errorAngle = getAngle(angleA, angleB);
 			// update the odometer position (example to follow:)
-			robot.turnTo(errorAngle);
-			odo.setPosition(new double [] {0.0, 0.0, 0.0}, new boolean [] {true, true, true});
+			robot.turnTo(errorAngle + 45);
+			odo.setPosition(new double [] {0.0, 0.0, Math.toRadians(45)}, new boolean [] {true, true, true});
+			robot.goForward(12);
 		} else {
 			/*
 			 * The robot should turn until it sees the wall, then look for the
@@ -62,17 +72,24 @@ public class USLocalizer {
 			//goes to end of wall
 			rotateFromWall(true);
 			angleA = odo.getTheta();
-			//
+			
+			Sound.beep();
+			robot.turnTo(15);
+			Sound.beep();
+			
 			rotateToWall(false);
-			rotateToWall(false);
+			
+			//rotateToWall(false);
+			
 			angleB = odo.getTheta();
 			//
 			// FILL THIS IN
 			//
 			errorAngle = getAngle(angleA, angleB);
-			robot.turnTo(errorAngle);
-			odo.setPosition(new double [] {0.0, 0.0, 0.0}, new boolean [] {true, true, true});
-
+			robot.turnTo(errorAngle + 45);
+			odo.setPosition(new double [] {0.0, 0.0, 45}, new boolean [] {true, true, true});
+			
+			robot.goForward(5);
 		}
 	}
 	 private void rotateFromWall(boolean direction)

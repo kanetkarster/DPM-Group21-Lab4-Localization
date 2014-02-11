@@ -15,18 +15,15 @@ public class Lab4 {
 		
 		Button.waitForAnyPress();
 		// perform the ultrasonic localization
-/*		USLocalizer usl = new USLocalizer(odo, driver, us, USLocalizer.LocalizationType.FALLING_EDGE);
-		usl.doLocalization();*/
-
+		USLocalizer usl = new USLocalizer(odo, driver, us, USLocalizer.LocalizationType.FALLING_EDGE);
+		usl.doLocalization();
+				
 		// perform the light sensor localization
 		LightLocalizer lsl = new LightLocalizer(odo, driver, cs);
 		lsl.doLocalization();
 
-
-/*		Button.waitForAnyPress();
-
-		driver.travel(60, 30);
-		driver.travel(30, 30);*/
+		driver.travel(0, 0);
+		driver.turnTo(Math.toDegrees(-odo.getTheta()));
 
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);

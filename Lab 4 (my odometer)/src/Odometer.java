@@ -76,7 +76,7 @@ public class Odometer extends Thread {
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
-				theta += deltaTheta;
+				theta = (theta + deltaTheta) % (2 * Math.PI);
 				
 				dX = deltaDistance * Math.sin(theta);
 				dY = deltaDistance * Math.cos(theta);
@@ -105,7 +105,7 @@ public class Odometer extends Thread {
 		synchronized (lock) {
 				position[0] = x;
 				position[1] = y;
-				position[2] = theta / (2 * 3.141592) * 360;
+				position[2] = theta / (2 * Math.PI) * 360;
 		}
 	}
 
@@ -148,7 +148,7 @@ public class Odometer extends Thread {
 			if (update[1])
 				y = position[1];
 			if (update[2])
-				theta = position[2];
+				theta = position[2] % (2 * Math.PI);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class Odometer extends Thread {
 
 	public void setTheta(double theta) {
 		synchronized (lock) {
-			this.theta = theta;
+			this.theta = theta % (2 * Math.PI);
 		}
 	}
 }
