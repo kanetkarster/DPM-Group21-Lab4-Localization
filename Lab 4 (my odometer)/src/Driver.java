@@ -1,8 +1,11 @@
-/**
+/*
  * Driver.java
  * 
  * The driver class used in our design
  * Controls all of the robot's movement
+ * 
+ * Satyajit Kanetkar
+ * Sean Wolfe
  */
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
@@ -59,7 +62,10 @@ public class Driver extends Thread  {
 			
 			goForward(distance);
 	}
-	
+/**
+ * Has the robot go forward a specified distance
+ * @param distance to go forward
+ */
 	public void goForward(double distance){
 		
 		// drive forward 
@@ -74,7 +80,10 @@ public class Driver extends Thread  {
 		
 		navigating = false;
 	}
-	
+/**
+ * has the robot turn a specified numbr of degrres
+ * @param theta degrees to turn
+ */
 	public void turnTo (double theta){
 	
 		// turn degrees clockwise
@@ -88,6 +97,11 @@ public class Driver extends Thread  {
 		
 		navigating = false;
 	}
+/**
+ * Has the robot rotate until this.stop() is called
+ * @param forward: direction the robot travels in
+ * 					true is cw, false is ccw
+ */
 	public void rotate (boolean forward){
 		leftMotor.setSpeed(LOCALIZE_SPEED);
 		rightMotor.setSpeed(LOCALIZE_SPEED);
@@ -99,7 +113,9 @@ public class Driver extends Thread  {
 			rightMotor.forward();
 		}
 	}
-	
+/**
+ * Stops the robot
+ */
 	public void stop(){
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);

@@ -1,3 +1,9 @@
+/*
+ * lightlocalizer.java
+ * 
+ * Satyajit Kanetkar
+ * Sean Wolfe
+ */
 import java.util.ArrayList;
 
 import lejos.nxt.ColorSensor;
@@ -11,8 +17,7 @@ public class LightLocalizer {
 	private Odometer odo;
 	private Driver robot;
 	private ColorSensor cs;
-	private static final int LINE_VALUE = 420;
-	private final double d_Light_To_Sensor = 12;
+	private final double D_LIGHT_TO_CENTER = 12;
 	
 	NXTRegulatedMotor leftMotor = Motor.A;
 	NXTRegulatedMotor rightMotor = Motor.B;
@@ -29,92 +34,49 @@ public class LightLocalizer {
 		this.robot = driver;
 		this.cs = cs;
 		LCD.clear();
-		// turn on the light
 	}
-	
+/**
+ * does light sensor localiation
+ * 
+ * @return robot knowing its X and Y coordinates
+ */
 	public void doLocalization() {
-		// drive to location listed in tutorial
-		// start rotating and clock all 4 gridlines
-		// do trig to compute (0,0) and 0 degrees
-		// when done travel to (0,0) and turn to 0 degrees
-		/*leftMotor.setSpeed(200);
-		rightMotor.setSpeed(200);
-		
-		leftMotor.forward();
-		rightMotor.forward();
-		lightValue = cs.getNormalizedLightValue();
-		while(cs.getNormalizedLightValue() > LINE_VALUE){
-			lightValue = cs.getNormalizedLightValue();
-		    try {Thread.sleep(40);} catch (InterruptedException e) {}
-		}
-		robot.stop(); 
-		
-	    odo.setY(0);
-	    robot.turnTo(90);
-	    
-	    leftMotor.setSpeed(200);
-		rightMotor.setSpeed(200);
-	    leftMotor.forward();
-		rightMotor.forward();
-	    
-	    while(cs.getNormalizedLightValue() > LINE_VALUE){
-			lightValue = cs.getNormalizedLightValue();
-		    try {Thread.sleep(40);} catch (InterruptedException e) {}
-		}
-         robot.stop();
-		
-	    odo.setX(0);
-	    robot.turnTo(-90);
-	    robot.turnTo(360);*/		
-/*		while(true ){
-			
-			try {Thread.sleep(50);} catch (InterruptedException e) {}
-		
-			
-		if(cs.getNormalizedLightValue() < LINE_VALUE){
-			if(counter >= 3){
-				robot.stop(); 
-				break;
-			}
-			//theta1 = 180/Math.PI * odo.getTheta();
-		 	 line[counter] = 180/Math.PI * odo.getTheta(); 
-			 //theta = 180/Math.PI * odo.getTheta();
-			counter ++;
-			
-		}
-		else if (180/Math.PI * odo.getTheta() >= 360){
-			robot.stop();
-			break;
-		}
-		else{
-			leftMotor.setSpeed(100);
-			rightMotor.setSpeed(100);
-		    leftMotor.forward();
-			rightMotor.backward();
-			robot.rotate(true);
-
-		}
-		
-	}*/
+	//stores current time, in order to not measure same line twice
 	double lastLineTime = System.currentTimeMillis();
+	//red floodlight for consistent values
 	cs.setFloodlight(lejos.robotics.Color.RED);
 	cs.calibrateHigh();
+	//sets value for darkline
 	double lv = cs.getNormalizedLightValue() - 125;
 	robot.rotate(true);
-	while (odo.getTheta() * 180 / Math.PI <= 358){
+	//rotates the robot 360 degrees
+	while (odo.getTheta() * 180 / Math.PI <= 359){
 		try {Thread.sleep(50);} catch (InterruptedException e) {}
-		lightValue = cs.getNormalizedLightValue();
+/*		//updates light value to display, debugging
+		lightValue = cs.getNormalizedLightValue();*/
+		//if it sees a black line and it has been 60ms from the last black line:
 		if(cs.getNormalizedLightValue() < lv && ((System.currentTimeMillis() - lastLineTime) > 60)){
-				counter++;
-				angles.add(odo.getTheta());
-				lastLineTime = System.currentTimeMillis();
+			/*debugging
+			counter++;*/
+			
+			//adds current angle to arraylist
+			angles.add(odo.getTheta());
+			//updates time of last crossing
+			lastLineTime = System.currentTimeMillis();
 			}
 	}
-
+	//stops the robot
 	robot.stop();
 
-	odo.setY(-d_Light_To_Sensor * Math.cos((angles.get(2)-angles.get(0))/2));
-	odo.setX(-d_Light_To_Sensor * Math.cos((angles.get(3)-angles.get(1))/2));
+	//updates X and Y locations
+	odo.setY(-D_LIGHT_TO_CENTER * Math.cos((angles.get(2)-angles.get(0))/2));
+	odo.setX(-D_LIGHT_TO_CENTER * Math.cos((angles.get(3)-angles.get(1))/2));
 	
+	//travels to center
+	robot.travel(0, 0);
+	//turns to face 0 degrees
+	robot.turnTo(Math.toDegrees(-odo.getTheta()));
+	//lightsensor fixes heading
+	robot.turnTo(270 - (angles.get(3)-angles.get(1))/2);
 	} 
  }

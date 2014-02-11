@@ -1,3 +1,10 @@
+/*
+ * Main java project
+ * lab4.java
+ * 
+ * Satyajit Kanetkar
+ * Sean Wolfe
+ */
 import lejos.nxt.*;
 
 public class Lab4 {
@@ -21,9 +28,6 @@ public class Lab4 {
 		// perform the light sensor localization
 		LightLocalizer lsl = new LightLocalizer(odo, driver, cs);
 		lsl.doLocalization();
-
-		driver.travel(0, 0);
-		driver.turnTo(Math.toDegrees(-odo.getTheta()));
 
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
