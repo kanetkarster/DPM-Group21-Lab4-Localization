@@ -1,9 +1,3 @@
-/**
- * Odometer Thread file
- * 
- * Satyajit Kanetkar
- * Sean Wolfe
- */
 import lejos.nxt.*;
 import lejos.util.*;
 

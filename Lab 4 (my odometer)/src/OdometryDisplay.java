@@ -1,8 +1,7 @@
-/**
+/*
  * OdometryDisplay.java
  * 
- * Satyajit Kanetkar
- * Sean Wolfe
+ * Controls what is displayed on the NXT screen
  */
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;

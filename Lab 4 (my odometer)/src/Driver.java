@@ -3,9 +3,6 @@
  * 
  * The driver class used in our design
  * Controls all of the robot's movement
- * 
- * Satyajit Kanetkar
- * Sean Wolfe
  */
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;

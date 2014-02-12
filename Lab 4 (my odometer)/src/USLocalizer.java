@@ -1,9 +1,3 @@
-/**
- * Localization using the ultrasonic sensor
- * 
- * Satyajit Kanetkar
- * Sean Wolfe
- */
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
@@ -82,15 +76,13 @@ public class USLocalizer {
 			Sound.beep();
 			robot.turnTo(15);
 			Sound.beep();
-			
+			//goes in the opposite direction towards a wall
 			rotateToWall(false);
 			
 			//rotateToWall(false);
 			
 			angleB = odo.getTheta();
-			//
-			// FILL THIS IN
-			//
+
 			errorAngle = getAngle(angleA, angleB);
 			robot.turnTo(errorAngle + 45);
 			odo.setPosition(new double [] {0.0, 0.0, 45}, new boolean [] {true, true, true});

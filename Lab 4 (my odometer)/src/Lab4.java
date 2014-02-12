@@ -1,8 +1,3 @@
-/**
- * Main java class file for localization
- * Satyajit Kanetkar
- * Sean Wolfe
- */
 import lejos.nxt.*;
 
 public class Lab4 {

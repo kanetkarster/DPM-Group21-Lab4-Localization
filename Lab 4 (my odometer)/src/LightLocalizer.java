@@ -1,9 +1,3 @@
-/**
- * Localization using the light sensor
- * 
- * Satyajit Kanetkar
- * Sean Wolfe
- */
 import java.util.ArrayList;
 
 import lejos.nxt.ColorSensor;
@@ -42,33 +36,83 @@ public class LightLocalizer {
 		// drive to location listed in tutorial
 		// start rotating and clock all 4 gridlines
 		// do trig to compute (0,0) and 0 degrees
-		// when done travel to (0,0) and turn to 0 degrees	
-	//sets to current time
+		// when done travel to (0,0) and turn to 0 degrees
+		/*leftMotor.setSpeed(200);
+		rightMotor.setSpeed(200);
+		
+		leftMotor.forward();
+		rightMotor.forward();
+		lightValue = cs.getNormalizedLightValue();
+		while(cs.getNormalizedLightValue() > LINE_VALUE){
+			lightValue = cs.getNormalizedLightValue();
+		    try {Thread.sleep(40);} catch (InterruptedException e) {}
+		}
+		robot.stop(); 
+		
+	    odo.setY(0);
+	    robot.turnTo(90);
+	    
+	    leftMotor.setSpeed(200);
+		rightMotor.setSpeed(200);
+	    leftMotor.forward();
+		rightMotor.forward();
+	    
+	    while(cs.getNormalizedLightValue() > LINE_VALUE){
+			lightValue = cs.getNormalizedLightValue();
+		    try {Thread.sleep(40);} catch (InterruptedException e) {}
+		}
+         robot.stop();
+		
+	    odo.setX(0);
+	    robot.turnTo(-90);
+	    robot.turnTo(360);*/		
+/*		while(true ){
+			
+			try {Thread.sleep(50);} catch (InterruptedException e) {}
+		
+			
+		if(cs.getNormalizedLightValue() < LINE_VALUE){
+			if(counter >= 3){
+				robot.stop(); 
+				break;
+			}
+			//theta1 = 180/Math.PI * odo.getTheta();
+		 	 line[counter] = 180/Math.PI * odo.getTheta(); 
+			 //theta = 180/Math.PI * odo.getTheta();
+			counter ++;
+			
+		}
+		else if (180/Math.PI * odo.getTheta() >= 360){
+			robot.stop();
+			break;
+		}
+		else{
+			leftMotor.setSpeed(100);
+			rightMotor.setSpeed(100);
+		    leftMotor.forward();
+			rightMotor.backward();
+			robot.rotate(true);
+
+		}
+		
+	}*/
 	double lastLineTime = System.currentTimeMillis();
-	//sets up native values for light sensor
 	cs.setFloodlight(lejos.robotics.Color.RED);
 	cs.calibrateHigh();
 	double lv = cs.getNormalizedLightValue() - 125;
-	//starts to rotate
 	robot.rotate(true);
-	//only processes lines while it has rotated < 360
 	while (odo.getTheta() * 180 / Math.PI <= 358){
 		try {Thread.sleep(50);} catch (InterruptedException e) {}
-		//to display on display
 		lightValue = cs.getNormalizedLightValue();
-		//if it sees a line and it has been 60ms from the last line
 		if(cs.getNormalizedLightValue() < lv && ((System.currentTimeMillis() - lastLineTime) > 60)){
-			//increments counter (for display)
-			counter++;
-			//adds angle of lines
-			angles.add(odo.getTheta());
-			//updates time to abvoid seeing one line twice
-			lastLineTime = System.currentTimeMillis();
+				counter++;
+				angles.add(odo.getTheta());
+				lastLineTime = System.currentTimeMillis();
 			}
 	}
-	//stops robot
+
 	robot.stop();
-	//updates X and Y posistions
+
 	odo.setY(-d_Light_To_Sensor * Math.cos((angles.get(2)-angles.get(0))/2));
 	odo.setX(-d_Light_To_Sensor * Math.cos((angles.get(3)-angles.get(1))/2));
 	
