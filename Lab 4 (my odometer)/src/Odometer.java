@@ -1,3 +1,9 @@
+/**
+ * Odometer Thread file
+ * 
+ * Satyajit Kanetkar
+ * Sean Wolfe
+ */
 import lejos.nxt.*;
 import lejos.util.*;
 
@@ -5,8 +11,6 @@ import lejos.util.*;
  * Odometer.java
  * 
  * Odometer used throughout this project
- * Satyajit Kanetkar
- * Sean Wolfe
  */
 
 public class Odometer extends Thread {

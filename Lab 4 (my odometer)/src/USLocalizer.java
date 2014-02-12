@@ -1,7 +1,7 @@
-/*
- * USlocalizer.java
+/**
+ * Localization using the ultrasonic sensor
  * 
- * Satyajit kanetkar
+ * Satyajit Kanetkar
  * Sean Wolfe
  */
 import lejos.nxt.LCD;
@@ -38,24 +38,22 @@ public class USLocalizer {
 		// switch off the ultrasonic sensor
 		us.off();
 	}
-/**
- *	has the robot start localizing with the US
- *
- * @return robot facing approx. 45 degrees
- */
+	
 	public void doLocalization() {
 		double [] pos = new double [3];
-		//uses falling endge localizations
 		if (locType == LocalizationType.FALLING_EDGE) {
 			// rotate the robot until it sees no wall
 			rotateFromWall(true);
-			//rotates 25 degrees to avoid seeing a wall twice
+			//to avoid seeing one wall twice
+			Sound.beep();
 			robot.turnTo(25);
+			Sound.beep();
 			// keep rotating until the robot sees a wall, then latch the angle
 			rotateToWall(true);
 			angleA = odo.getTheta();
-			//rotates 25 degrees to avoid seeing a wall twice
+			Sound.beep();
 			robot.turnTo(-25);
+			Sound.beep();
 			// switch direction and wait until it sees no wall
 			rotateFromWall(false);
 			// keep rotating until the robot sees a wall, then latch the angle
@@ -64,13 +62,10 @@ public class USLocalizer {
 			// angleA is clockwise from angleB, so assume the average of the
 			// angles to the right of angleB is 45 degrees past 'north'
 			errorAngle = getAngle(angleA, angleB);
-			//turns to face about 45 deg
+			// update the odometer position (example to follow:)
 			robot.turnTo(errorAngle + 45);
-			//updates odometer
 			odo.setPosition(new double [] {0.0, 0.0, Math.toRadians(45)}, new boolean [] {true, true, true});
-			//allows LightSensor to see all 4 lines
 			robot.goForward(12);
-			//uses rising edge localizations
 		} else {
 			/*
 			 * The robot should turn until it sees the wall, then look for the
@@ -83,57 +78,62 @@ public class USLocalizer {
 			//goes to end of wall
 			rotateFromWall(true);
 			angleA = odo.getTheta();
-			//rotates 15 degrees to avoid seeing a wall twice
+			
+			Sound.beep();
 			robot.turnTo(15);
-			rotateToWall(false);			
+			Sound.beep();
+			
+			rotateToWall(false);
+			
+			//rotateToWall(false);
+			
 			angleB = odo.getTheta();
-			// angleA is clockwise from angleB, so assume the average of the
-			// angles to the right of angleB is 45 degrees past 'north'
+			//
+			// FILL THIS IN
+			//
 			errorAngle = getAngle(angleA, angleB);
-			//turns to face about 45 deg
 			robot.turnTo(errorAngle + 45);
-			//updates odometer
-			odo.setPosition(new double [] {0.0, 0.0, Math.toRadians(45)}, new boolean [] {true, true, true});
-			//allows LightSensor to see all 4 lines
+			odo.setPosition(new double [] {0.0, 0.0, 45}, new boolean [] {true, true, true});
+			
+			robot.goForward(5);
 		}
 	}
- /**Has the robot turn until it sees no wall
-  * 
-  * @param direction true is clockwise, false is counterclockwise rotation
-  */
-	 private void rotateFromWall(boolean direction){
-		 //direction to rotate in
+	 private void rotateFromWall(boolean direction)
+	 {
 		robot.rotate(direction);
-		//keeps rotating until the distance is less than ~35
 		while(distance < (WALL_DISTANCE + NOISE)){
 			distance = getFilteredData();	//debugging, don't care about collissions
 		}
 		robot.stop();
 	}
- /**
-  * Has the robot turn until it sees a wall
-  * 
-  * @param direction true is clockwise, false is counterclockwise rotation
-  */
+	 /**
+	  * 
+	  * @param direction true is clockwise, false is counterclockwise rotation
+	  */
 	private void rotateToWall(boolean direction){
-		 //direction to rotate in
 		robot.rotate(direction);
-		//keeps rotating until the distance is less than ~35
+		distance = getFilteredData();
 		while(distance > (WALL_DISTANCE - NOISE)){
-			distance = getFilteredData(); //debugging
+			distance = getFilteredData();
 		}
 		robot.stop();
 	}
-/**
- * Tells the robot how many degrees to turn to face 0 degrees
- * 
- * @param alpha first error angle
- * @param beta second error angle
- * @return Degrees to turn to face 0 degrees
- */
 	private double getAngle(double alpha, double beta){
-		//calculates angle to turn to
-		 return (alpha > beta) ? (45 - (alpha + beta)/2) : (225 - (alpha + beta)/2);
+/*		 return (alpha > beta) ? (225 - (alpha + beta)/2) : (45 - (alpha + beta)/2);
+*/	
+		 double deltaTheta;
+		 
+		 if(alpha > beta)
+			{
+			  deltaTheta = 45 - (alpha + beta)/2;
+			  
+			}
+			else
+			{
+				deltaTheta = 225 - (alpha + beta)/2;
+			}
+			 
+		 return deltaTheta;
 		}
 	private int getFilteredData() {
 		int dist;
@@ -142,9 +142,9 @@ public class USLocalizer {
 		us.ping();
 		// wait for the ping to complete
 		try { Thread.sleep(50); } catch (InterruptedException e) {}
+		
 		// there will be a delay here
 		dist = us.getDistance();
-		//filters bad values
 		if(dist > 50)
 			dist = 50;
 		return dist;

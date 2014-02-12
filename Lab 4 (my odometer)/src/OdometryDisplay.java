@@ -1,7 +1,6 @@
-/*
+/**
  * OdometryDisplay.java
  * 
- * Controls what is displayed on the NXT screen
  * Satyajit Kanetkar
  * Sean Wolfe
  */

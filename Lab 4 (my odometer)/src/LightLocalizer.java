@@ -1,5 +1,5 @@
-/*
- * lightlocalizer.java
+/**
+ * Localization using the light sensor
  * 
  * Satyajit Kanetkar
  * Sean Wolfe
@@ -17,7 +17,8 @@ public class LightLocalizer {
 	private Odometer odo;
 	private Driver robot;
 	private ColorSensor cs;
-	private final double D_LIGHT_TO_CENTER = 12;
+	private static final int LINE_VALUE = 420;
+	private final double d_Light_To_Sensor = 12;
 	
 	NXTRegulatedMotor leftMotor = Motor.A;
 	NXTRegulatedMotor rightMotor = Motor.B;
@@ -34,49 +35,42 @@ public class LightLocalizer {
 		this.robot = driver;
 		this.cs = cs;
 		LCD.clear();
+		// turn on the light
 	}
-/**
- * does light sensor localiation
- * 
- * @return robot knowing its X and Y coordinates
- */
+	
 	public void doLocalization() {
-	//stores current time, in order to not measure same line twice
+		// drive to location listed in tutorial
+		// start rotating and clock all 4 gridlines
+		// do trig to compute (0,0) and 0 degrees
+		// when done travel to (0,0) and turn to 0 degrees	
+	//sets to current time
 	double lastLineTime = System.currentTimeMillis();
-	//red floodlight for consistent values
+	//sets up native values for light sensor
 	cs.setFloodlight(lejos.robotics.Color.RED);
 	cs.calibrateHigh();
-	//sets value for darkline
 	double lv = cs.getNormalizedLightValue() - 125;
+	//starts to rotate
 	robot.rotate(true);
-	//rotates the robot 360 degrees
-	while (odo.getTheta() * 180 / Math.PI <= 359){
+	//only processes lines while it has rotated < 360
+	while (odo.getTheta() * 180 / Math.PI <= 358){
 		try {Thread.sleep(50);} catch (InterruptedException e) {}
-/*		//updates light value to display, debugging
-		lightValue = cs.getNormalizedLightValue();*/
-		//if it sees a black line and it has been 60ms from the last black line:
+		//to display on display
+		lightValue = cs.getNormalizedLightValue();
+		//if it sees a line and it has been 60ms from the last line
 		if(cs.getNormalizedLightValue() < lv && ((System.currentTimeMillis() - lastLineTime) > 60)){
-			/*debugging
-			counter++;*/
-			
-			//adds current angle to arraylist
+			//increments counter (for display)
+			counter++;
+			//adds angle of lines
 			angles.add(odo.getTheta());
-			//updates time of last crossing
+			//updates time to abvoid seeing one line twice
 			lastLineTime = System.currentTimeMillis();
 			}
 	}
-	//stops the robot
+	//stops robot
 	robot.stop();
-
-	//updates X and Y locations
-	odo.setY(-D_LIGHT_TO_CENTER * Math.cos((angles.get(2)-angles.get(0))/2));
-	odo.setX(-D_LIGHT_TO_CENTER * Math.cos((angles.get(3)-angles.get(1))/2));
+	//updates X and Y posistions
+	odo.setY(-d_Light_To_Sensor * Math.cos((angles.get(2)-angles.get(0))/2));
+	odo.setX(-d_Light_To_Sensor * Math.cos((angles.get(3)-angles.get(1))/2));
 	
-	//travels to center
-	robot.travel(0, 0);
-	//turns to face 0 degrees
-	robot.turnTo(Math.toDegrees(-odo.getTheta()));
-	//lightsensor fixes heading
-	robot.turnTo(270 - (angles.get(3)-angles.get(1))/2);
 	} 
  }

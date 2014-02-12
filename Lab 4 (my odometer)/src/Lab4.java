@@ -1,7 +1,5 @@
-/*
- * Main java project
- * lab4.java
- * 
+/**
+ * Main java class file for localization
  * Satyajit Kanetkar
  * Sean Wolfe
  */
@@ -28,6 +26,9 @@ public class Lab4 {
 		// perform the light sensor localization
 		LightLocalizer lsl = new LightLocalizer(odo, driver, cs);
 		lsl.doLocalization();
+
+		driver.travel(0, 0);
+		driver.turnTo(Math.toDegrees(-odo.getTheta()));
 
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
